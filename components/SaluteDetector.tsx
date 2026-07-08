@@ -25,6 +25,7 @@ export function SaluteDetector({ onTrigger, onReset, rewardVisible, rewardConten
 
   return (
     <div className="flex w-full flex-col items-center gap-5">
+      <StatusBar state={state} />
       <Camera
         videoRef={videoRef}
         frame={frame}
@@ -33,7 +34,6 @@ export function SaluteDetector({ onTrigger, onReset, rewardVisible, rewardConten
         rewardVisible={rewardVisible}
         rewardContent={rewardContent}
       />
-      <StatusBar state={state} />
 
       <button
         onClick={() => setDebugMode((v) => !v)}
