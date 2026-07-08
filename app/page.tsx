@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { SaluteDetector } from "@/components/SaluteDetector";
-import { AudioPlayer } from "@/components/AudioPlayer";
+import { AudioPlayer, type AudioPlayerHandle } from "@/components/AudioPlayer";
 import { RewardImage } from "@/components/RewardImage";
 import { RewardVideoLocal } from "@/components/RewardVideoLocal";
 import {
@@ -40,6 +40,7 @@ const REWARD_MUSIC_END_SECONDS: Record<GestureName, number | undefined> = {
 export default function Home() {
   const [started, setStarted] = useState(false);
   const [activeReward, setActiveReward] = useState<GestureName | null>(null);
+  const audioPlayerRef = useRef<AudioPlayerHandle>(null);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-8 bg-neutral-950 px-4 py-12">
@@ -51,7 +52,12 @@ export default function Home() {
 
       {!started ? (
         <button
-          onClick={() => setStarted(true)}
+          onClick={() => {
+            setStarted(true);
+            // Unlocks the audio element for autoplay-with-sound on Safari/iOS while
+            // we're still inside this real tap — gesture-triggered plays later can't do this.
+            audioPlayerRef.current?.prime();
+          }}
           className="rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-black transition hover:bg-white/90"
         >
           Start camera
@@ -72,6 +78,7 @@ export default function Home() {
       )}
 
       <AudioPlayer
+        ref={audioPlayerRef}
         active={activeReward !== null}
         src={(activeReward && REWARD_MUSIC_URL[activeReward]) || ""}
         startSeconds={activeReward ? REWARD_MUSIC_START_SECONDS[activeReward] : 0}

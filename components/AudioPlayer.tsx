@@ -1,6 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+
+export interface AudioPlayerHandle {
+  /**
+   * Unlocks this element for autoplay-with-sound on Safari/iOS. Must be called
+   * synchronously from inside a real user gesture (e.g. a button's onClick) — once
+   * unlocked, later gesture-triggered `active` changes can play without a fresh tap.
+   */
+  prime: () => void;
+}
 
 interface AudioPlayerProps {
   /** Play (looping) while true; paused and reset when false. */
@@ -12,10 +21,28 @@ interface AudioPlayerProps {
   endSeconds?: number;
 }
 
-/** Background reward music. A plain looping <audio> element with a manual fallback for autoplay-blocked browsers. */
-export function AudioPlayer({ active, src, startSeconds = 0, endSeconds }: AudioPlayerProps) {
+/**
+ * Background reward music. The <audio> element is always mounted (never conditionally
+ * removed) so that once `prime()` unlocks it via a real tap, it stays unlocked for every
+ * later autoplay triggered by gesture detection — Safari re-locks a freshly created element.
+ */
+export const AudioPlayer = forwardRef<AudioPlayerHandle, AudioPlayerProps>(function AudioPlayer(
+  { active, src, startSeconds = 0, endSeconds },
+  ref,
+) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [blocked, setBlocked] = useState(false);
+
+  useImperativeHandle(ref, () => ({
+    prime: () => {
+      const audio = audioRef.current;
+      if (!audio) return;
+      audio
+        .play()
+        .then(() => audio.pause())
+        .catch(() => {});
+    },
+  }));
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -29,7 +56,6 @@ export function AudioPlayer({ active, src, startSeconds = 0, endSeconds }: Audio
         .catch(() => setBlocked(true));
     } else {
       audio.pause();
-      audio.currentTime = 0;
     }
   }, [active, src, startSeconds]);
 
@@ -56,12 +82,10 @@ export function AudioPlayer({ active, src, startSeconds = 0, endSeconds }: Audio
     };
   }, [active, startSeconds, endSeconds]);
 
-  if (!active) return null;
-
   return (
     <div className="fixed bottom-4 right-4 z-40">
       <audio ref={audioRef} src={src} />
-      {blocked && (
+      {active && blocked && (
         <button
           onClick={() => {
             audioRef.current?.play();
@@ -74,4 +98,4 @@ export function AudioPlayer({ active, src, startSeconds = 0, endSeconds }: Audio
       )}
     </div>
   );
-}
+});
