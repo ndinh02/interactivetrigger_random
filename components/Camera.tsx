@@ -23,6 +23,8 @@ interface CameraProps {
   rewardVisible?: boolean;
   /** Reward content (image/video) shown inside the camera zone while `rewardVisible` is true. */
   rewardContent?: React.ReactNode;
+  /** Small status badge overlaid in the top-right corner of the feed. */
+  statusContent?: React.ReactNode;
 }
 
 /** Webcam feed, mirrored like a selfie camera, with an optional landmark overlay. */
@@ -33,6 +35,7 @@ export function Camera({
   showLandmarks,
   rewardVisible = false,
   rewardContent,
+  statusContent,
 }: CameraProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [aspectRatio, setAspectRatio] = useState(16 / 9);
@@ -128,6 +131,8 @@ export function Camera({
 
         {/* Rendered outside the mirrored wrapper above so it isn't flipped. */}
         <Overlay visible={rewardVisible}>{rewardContent}</Overlay>
+
+        {statusContent && <div className="absolute right-3 top-3 z-20">{statusContent}</div>}
       </div>
     </div>
   );
