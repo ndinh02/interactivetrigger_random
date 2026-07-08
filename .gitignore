@@ -36,6 +36,10 @@ yarn-error.log*
 # vercel
 .vercel
 
+# local-only reward media (not cleared for public distribution — see chat history)
+/public/audio/thump_up_video.mov
+/public/audio/du_bist_gut_genug.mp3
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

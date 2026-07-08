@@ -4,8 +4,16 @@ import { useState } from "react";
 import { SaluteDetector } from "@/components/SaluteDetector";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { RewardImage } from "@/components/RewardImage";
-import { RewardAudioCard } from "@/components/RewardAudioCard";
-import { SALUTE_IMAGE_URL, SALUTE_MUSIC_URL, THUMBS_UP_MUSIC_URL } from "@/lib/config";
+import { RewardVideoLocal } from "@/components/RewardVideoLocal";
+import {
+  SALUTE_IMAGE_URL,
+  SALUTE_MUSIC_START_SECONDS,
+  SALUTE_MUSIC_URL,
+  THUMBS_UP_MUSIC_END_SECONDS,
+  THUMBS_UP_MUSIC_START_SECONDS,
+  THUMBS_UP_MUSIC_URL,
+  THUMBS_UP_VIDEO_URL,
+} from "@/lib/config";
 import type { GestureName } from "@/types";
 
 const REWARD_MUSIC_URL: Record<GestureName, string | null> = {
@@ -13,6 +21,20 @@ const REWARD_MUSIC_URL: Record<GestureName, string | null> = {
   thumbsUp: THUMBS_UP_MUSIC_URL,
   peace: null,
   wave: null,
+};
+
+const REWARD_MUSIC_START_SECONDS: Record<GestureName, number> = {
+  salute: SALUTE_MUSIC_START_SECONDS,
+  thumbsUp: THUMBS_UP_MUSIC_START_SECONDS,
+  peace: 0,
+  wave: 0,
+};
+
+const REWARD_MUSIC_END_SECONDS: Record<GestureName, number | undefined> = {
+  salute: undefined,
+  thumbsUp: THUMBS_UP_MUSIC_END_SECONDS,
+  peace: undefined,
+  wave: undefined,
 };
 
 export default function Home() {
@@ -43,7 +65,7 @@ export default function Home() {
             activeReward === "salute" ? (
               <RewardImage src={SALUTE_IMAGE_URL} />
             ) : activeReward === "thumbsUp" ? (
-              <RewardAudioCard label="Thumbs up!" />
+              <RewardVideoLocal src={THUMBS_UP_VIDEO_URL} />
             ) : null
           }
         />
@@ -52,6 +74,8 @@ export default function Home() {
       <AudioPlayer
         active={activeReward !== null}
         src={(activeReward && REWARD_MUSIC_URL[activeReward]) || ""}
+        startSeconds={activeReward ? REWARD_MUSIC_START_SECONDS[activeReward] : 0}
+        endSeconds={activeReward ? REWARD_MUSIC_END_SECONDS[activeReward] : undefined}
       />
     </main>
   );

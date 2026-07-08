@@ -29,4 +29,13 @@ export const SALUTE_IMAGE_URL =
 
 /** Reward music, served from /public/audio, looped in the background while each reward is active. */
 export const SALUTE_MUSIC_URL = "/audio/mbappe_anthem.mp3";
+/** Seconds to skip at the start of the salute music, and on every loop replay. */
+export const SALUTE_MUSIC_START_SECONDS = 1;
+
 export const THUMBS_UP_MUSIC_URL = "/audio/du_bist_gut_genug.mp3";
+/** Clip bounds, in seconds, looped for the thumbs-up music. */
+export const THUMBS_UP_MUSIC_START_SECONDS = 18;
+export const THUMBS_UP_MUSIC_END_SECONDS = 24;
+
+/** Local video clip shown (muted) as the thumbs-up visual reward; already pre-trimmed. */
+export const THUMBS_UP_VIDEO_URL = "/audio/thump_up_video.mov";
