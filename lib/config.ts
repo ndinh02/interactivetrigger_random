@@ -26,12 +26,7 @@ export const MEDIAPIPE_WASM_URL =
 /** Trigger action placeholders — swap these for the real assets. */
 export const SALUTE_IMAGE_URL =
   "https://i.pinimg.com/736x/89/4d/10/894d103a87e448ae017e2bcd34e78075.jpg";
-export const SALUTE_YOUTUBE_URL = "https://youtu.be/zVKsHXrSvQk?list=RDzVKsHXrSvQk";
 
-/** Seconds of intro to skip at the start of the reward music, and on every loop replay. */
-export const MUSIC_INTRO_SKIP_SECONDS = 1;
-
-/** Reward clip shown (in the same corner spot as the salute picture) for a thumbs-up. */
-export const THUMBS_UP_YOUTUBE_URL = "https://www.youtube.com/watch?v=Q-7menWAF1g";
-export const THUMBS_UP_CLIP_START_SECONDS = 18;
-export const THUMBS_UP_CLIP_END_SECONDS = 25;
+/** Reward music, served from /public/audio, looped in the background while each reward is active. */
+export const SALUTE_MUSIC_URL = "/audio/mbappe_anthem.mp3";
+export const THUMBS_UP_MUSIC_URL = "/audio/du_bist_gut_genug.mp3";

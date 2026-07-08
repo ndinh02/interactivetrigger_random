@@ -2,20 +2,18 @@
 
 import { useState } from "react";
 import { SaluteDetector } from "@/components/SaluteDetector";
-import { YoutubePlayer } from "@/components/YoutubePlayer";
+import { AudioPlayer } from "@/components/AudioPlayer";
 import { RewardImage } from "@/components/RewardImage";
-import { RewardVideoClip } from "@/components/RewardVideoClip";
-import {
-  SALUTE_IMAGE_URL,
-  SALUTE_YOUTUBE_URL,
-  THUMBS_UP_CLIP_END_SECONDS,
-  THUMBS_UP_CLIP_START_SECONDS,
-  THUMBS_UP_YOUTUBE_URL,
-} from "@/lib/config";
-import { extractVideoId } from "@/lib/youtube";
+import { RewardAudioCard } from "@/components/RewardAudioCard";
+import { SALUTE_IMAGE_URL, SALUTE_MUSIC_URL, THUMBS_UP_MUSIC_URL } from "@/lib/config";
 import type { GestureName } from "@/types";
 
-const THUMBS_UP_VIDEO_ID = extractVideoId(THUMBS_UP_YOUTUBE_URL);
+const REWARD_MUSIC_URL: Record<GestureName, string | null> = {
+  salute: SALUTE_MUSIC_URL,
+  thumbsUp: THUMBS_UP_MUSIC_URL,
+  peace: null,
+  wave: null,
+};
 
 export default function Home() {
   const [started, setStarted] = useState(false);
@@ -25,7 +23,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center justify-center gap-8 bg-neutral-950 px-4 py-12">
       <div className="text-center">
         <p className="mt-1 text-sm text-white/50">
-          Salute for a reward image + music, or give a thumbs up for a bonus clip.
+          Salute for a reward image + music, or give a thumbs up for a bonus track.
         </p>
       </div>
 
@@ -44,18 +42,17 @@ export default function Home() {
           rewardContent={
             activeReward === "salute" ? (
               <RewardImage src={SALUTE_IMAGE_URL} />
-            ) : activeReward === "thumbsUp" && THUMBS_UP_VIDEO_ID ? (
-              <RewardVideoClip
-                videoId={THUMBS_UP_VIDEO_ID}
-                startSeconds={THUMBS_UP_CLIP_START_SECONDS}
-                endSeconds={THUMBS_UP_CLIP_END_SECONDS}
-              />
+            ) : activeReward === "thumbsUp" ? (
+              <RewardAudioCard label="Thumbs up!" />
             ) : null
           }
         />
       )}
 
-      <YoutubePlayer active={activeReward === "salute"} youtubeUrl={SALUTE_YOUTUBE_URL} />
+      <AudioPlayer
+        active={activeReward !== null}
+        src={(activeReward && REWARD_MUSIC_URL[activeReward]) || ""}
+      />
     </main>
   );
 }
