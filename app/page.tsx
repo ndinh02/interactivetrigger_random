@@ -43,9 +43,9 @@ export default function Home() {
   const audioPlayerRef = useRef<AudioPlayerHandle>(null);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-8 bg-neutral-950 px-4 py-12">
+    <main className="flex min-h-screen flex-col items-center gap-3 bg-neutral-950 px-4 pb-8 pt-3">
       <div className="text-center">
-        <p className="mt-1 text-sm text-white/50">
+        <p className="text-sm text-white/50">
           Salute for a reward image + music, or give a thumbs up for a bonus track.
         </p>
       </div>
